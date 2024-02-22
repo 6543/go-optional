@@ -48,3 +48,10 @@ func (o Option[T]) ValueOrDefault(v T) T {
 	}
 	return v
 }
+
+func (o Option[T]) ToPtr() *T {
+	if o.Has() {
+		return &o[0]
+	}
+	return nil
+}

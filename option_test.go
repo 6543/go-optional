@@ -29,6 +29,12 @@ func TestOption(t *testing.T) {
 	var ptr *int
 	assert.False(t, optional.FromPtr(ptr).Has())
 
+	var boolPtr *bool
+	assert.Equal(t, boolPtr, optional.None[bool]().ToPtr())
+
+	boolPtr = optional.Some[bool](false).ToPtr()
+	assert.Equal(t, optional.ToPtr(false), boolPtr)
+
 	opt1 := optional.FromPtr(optional.ToPtr(1))
 	assert.True(t, opt1.Has())
 	assert.Equal(t, int(1), opt1.Value())
