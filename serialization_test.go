@@ -1,4 +1,4 @@
-// Copyright 2024 The Gitea Authors. All rights reserved.
+// Copyright 2024 "6543". All rights reserved.
 // SPDX-License-Identifier: MIT
 
 package optional_test
