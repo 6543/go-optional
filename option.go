@@ -58,14 +58,14 @@ func (o Option[T]) ToPtr() *T {
 	return nil
 }
 
-type hasHasFunc interface {
-	Has() bool
-}
-
 // ExcractValue return value or nil and bool if object was an Optional
 // it should only be used if you already have to deal with interface{} values
 // and expect an Option type within it.
 func ExcractValue(obj any) (any, bool) {
+	type hasHasFunc interface {
+		Has() bool
+	}
+
 	if hasObj, ok := obj.(hasHasFunc); !ok {
 		return nil, false
 	} else if !hasObj.Has() {
