@@ -6,7 +6,7 @@ package optional_test
 import (
 	"testing"
 
-	"github.com/6543/go-optional"
+	"github.com/6543/go-optional/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,12 +52,12 @@ func TestOption(t *testing.T) {
 	assert.Equal(t, int(1), opt3.Value())
 }
 
-func TestExcractValue(t *testing.T) {
-	val, ok := optional.ExcractValue("aaaa")
+func TestExtractValue(t *testing.T) {
+	val, ok := optional.ExtractValue("aaaa")
 	assert.False(t, ok)
 	assert.Nil(t, val)
 
-	val, ok = optional.ExcractValue(optional.Some("aaaa"))
+	val, ok = optional.ExtractValue(optional.Some("aaaa"))
 	assert.True(t, ok)
 	if assert.NotNil(t, val) {
 		val, ok := val.(string)
@@ -65,16 +65,16 @@ func TestExcractValue(t *testing.T) {
 		assert.EqualValues(t, "aaaa", val)
 	}
 
-	val, ok = optional.ExcractValue(optional.None[float64]())
+	val, ok = optional.ExtractValue(optional.None[float64]())
 	assert.True(t, ok)
 	assert.Nil(t, val)
 
-	val, ok = optional.ExcractValue(&fakeHas{})
+	val, ok = optional.ExtractValue(&fakeHas{})
 	assert.False(t, ok)
 	assert.Nil(t, val)
 
 	wrongType := make(fakeHas2, 0, 1)
-	val, ok = optional.ExcractValue(wrongType)
+	val, ok = optional.ExtractValue(wrongType)
 	assert.False(t, ok)
 	assert.Nil(t, val)
 }

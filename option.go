@@ -22,11 +22,6 @@ func FromPtr[T any](v *T) Option[T] {
 	return Some(*v)
 }
 
-// Depricated
-func ToPtr[T any](val T) *T {
-	return &val
-}
-
 func FromNonDefault[T comparable](v T) Option[T] {
 	var zero T
 	if v == zero {
@@ -58,10 +53,10 @@ func (o Option[T]) ToPtr() *T {
 	return nil
 }
 
-// ExcractValue return value or nil and bool if object was an Optional
+// ExtractValue return value or nil and bool if object was an Optional
 // it should only be used if you already have to deal with interface{} values
 // and expect an Option type within it.
-func ExcractValue(obj any) (any, bool) {
+func ExtractValue(obj any) (any, bool) {
 	rt := reflect.TypeOf(obj)
 	if rt.Kind() != reflect.Slice {
 		return nil, false

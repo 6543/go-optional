@@ -1,4 +1,4 @@
-module github.com/6543/go-optional
+module github.com/6543/go-optional/v2
 
 go 1.22.0
 
