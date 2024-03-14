@@ -33,9 +33,9 @@ func TestOption(t *testing.T) {
 	assert.Equal(t, boolPtr, optional.None[bool]().ToPtr())
 
 	boolPtr = optional.Some[bool](false).ToPtr()
-	assert.Equal(t, optional.ToPtr(false), boolPtr)
+	assert.Equal(t, toPtr(false), boolPtr)
 
-	opt1 := optional.FromPtr(optional.ToPtr(1))
+	opt1 := optional.FromPtr(toPtr(1))
 	assert.True(t, opt1.Has())
 	assert.Equal(t, int(1), opt1.Value())
 
@@ -50,4 +50,26 @@ func TestOption(t *testing.T) {
 	opt3 := optional.FromNonDefault(1)
 	assert.True(t, opt3.Has())
 	assert.Equal(t, int(1), opt3.Value())
+}
+
+func TestExcractValue(t *testing.T) {
+	val, ok := optional.ExcractValue("aaaa")
+	assert.False(t, ok)
+	assert.Nil(t, val)
+
+	val, ok = optional.ExcractValue(optional.Some("aaaa"))
+	assert.True(t, ok)
+	if assert.NotNil(t, val) {
+		val, ok := val.(string)
+		assert.True(t, ok)
+		assert.EqualValues(t, "aaaa", val)
+	}
+
+	val, ok = optional.ExcractValue(optional.None[float64]())
+	assert.True(t, ok)
+	assert.Nil(t, val)
+}
+
+func toPtr[T any](val T) *T {
+	return &val
 }

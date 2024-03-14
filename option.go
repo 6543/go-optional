@@ -3,6 +3,8 @@
 
 package optional
 
+import "reflect"
+
 type Option[T any] []T
 
 func None[T any]() Option[T] {
@@ -20,7 +22,7 @@ func FromPtr[T any](v *T) Option[T] {
 	return Some(*v)
 }
 
-// ToPtr returns the pointer of a copy of any given value
+// Depricated
 func ToPtr[T any](val T) *T {
 	return &val
 }
@@ -54,4 +56,28 @@ func (o Option[T]) ToPtr() *T {
 		return &o[0]
 	}
 	return nil
+}
+
+type hasHasFunc interface {
+	Has() bool
+}
+
+// ExcractValue return value or nil and bool if object was an Optional
+// it should only be used if you already have to deal with interface{} values
+// and expect an Option type within it.
+func ExcractValue(obj any) (any, bool) {
+	if hasObj, ok := obj.(hasHasFunc); !ok {
+		return nil, false
+	} else if !hasObj.Has() {
+		return nil, true
+	}
+	rt := reflect.TypeOf(obj)
+	if rt.Kind() != reflect.Slice {
+		return nil, false
+	}
+	rv := reflect.ValueOf(obj)
+	if rv.Len() != 1 {
+		return nil, true
+	}
+	return rv.Index(0).Interface(), true
 }
