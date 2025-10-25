@@ -9,8 +9,51 @@ import (
 	"github.com/6543/go-optional/v2"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 )
+
+type testBoolStruct struct {
+	OptBoolOmitEmpty1 optional.Option[bool] `json:"opt_bool_omit_empty_1,omitempty" yaml:"opt_bool_omit_empty_1,omitempty"`
+	OptBoolOmitEmpty2 optional.Option[bool] `json:"opt_bool_omit_empty_2,omitempty" yaml:"opt_bool_omit_empty_2,omitempty"`
+	OptBoolOmitEmpty3 optional.Option[bool] `json:"opt_bool_omit_empty_3,omitempty" yaml:"opt_bool_omit_empty_3,omitempty"`
+	OptBool4          optional.Option[bool] `json:"opt_bool_4" yaml:"opt_bool_4"`
+	OptBool5          optional.Option[bool] `json:"opt_bool_5" yaml:"opt_bool_5"`
+	OptBool6          optional.Option[bool] `json:"opt_bool_6" yaml:"opt_bool_6"`
+}
+
+func TestOptionalBoolYaml(t *testing.T) {
+	tYaml := `
+opt_bool_omit_empty_1: false
+opt_bool_omit_empty_2: true
+opt_bool_4: false
+opt_bool_5: true
+`
+
+	tObj := new(testBoolStruct)
+	t.Run("Unmarshal", func(t *testing.T) {
+		err := yaml.Unmarshal([]byte(tYaml), tObj)
+		require.NoError(t, err)
+		assert.EqualValues(t, &testBoolStruct{
+			OptBoolOmitEmpty1: optional.Some(false),
+			OptBoolOmitEmpty2: optional.Some(true),
+			OptBoolOmitEmpty3: optional.None[bool](),
+			OptBool4:          optional.Some(false),
+			OptBool5:          optional.Some(true),
+			OptBool6:          optional.None[bool](),
+		}, tObj)
+	})
+	t.Run("Marshal", func(t *testing.T) {
+		tBytes, err := yaml.Marshal(tObj)
+		require.NoError(t, err)
+		assert.EqualValues(t, `opt_bool_omit_empty_1: false
+opt_bool_omit_empty_2: true
+opt_bool_4: false
+opt_bool_5: true
+opt_bool_6: null
+`, string(tBytes))
+	})
+}
 
 func TestOptionalToYaml(t *testing.T) {
 	tests := []struct {
